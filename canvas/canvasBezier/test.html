@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,9 +19,11 @@
    <canvas height="400" width="600" id="canvas"></canvas> 
    <script>
         var data = [Math.random() * 300];
-        for (var i = 1; i < 10; i++) { //按照echarts
+        for (var i = 1; i < 30; i++) { //按照echarts
             data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
         }
+
+        console.log(data)
         option = {
             canvas:{
                 id: 'canvas'
@@ -57,9 +60,12 @@
                 diffX = 0,
                 self = this
             this.series.data.forEach(function (obj, i) {
+                console.log('obj',obj,i)
                 if (dataMax < obj) dataMax = obj
                 if (dataMin > obj) dataMin = obj
             })
+            console.log('dataMax',dataMax)
+            console.log('dataMin',dataMin)
             diffY = this.height / (dataMax - dataMin)
             diffX = this.width / this.series.data.length
             for(var index = 0; index < this.series.data.length; index ++) {
@@ -93,6 +99,7 @@
                 }
                 ctrlNodesArr.push(obj)
             }
+            console.log('ctrlNodesArr',ctrlNodesArr)
         }
         LinearGradient.prototype.draw = function() {
             // dataMax = yMax; dataMin = yMin
@@ -106,7 +113,7 @@
                     ctrlBy = item.cBy,
                     x = item.nowX,
                     y = item.nowY 
-                self.ctx.bezierCurveTo(ctrlAx, ctrlAy, ctrlBx, ctrlBy, x, y);
+                self.ctx.bezierCurveTo(ctrlAx, ctrlAy, ctrlBx, ctrlBy, x, y); // 三个控制点， 三次贝塞尔绘制  quadraticCurveTo() 
             })
             var lingrad = this.ctx.createLinearGradient(0,0,0,this.width);
             lingrad.addColorStop(0, this.series.areaStyle.color);
@@ -138,7 +145,10 @@
                 ctrlDrawIndex++
             }else {
                 self.ctx.clearRect(0, 0, self.width, self.height)
-                item.t += 0.05
+
+                console.log('t=',item.t)
+
+                item.t += 0.03
                 var ballX = ox * Math.pow((1 - item.t), 3) + 3 * ctrlAx * item.t * Math.pow((1 - item.t), 2) + 3 * ctrlBx * Math.pow(item.t, 2) * (1 - item.t) + x * Math.pow(item.t, 3)
                 var ballY = oy * Math.pow((1 - item.t), 3) + 3 * ctrlAy * item.t * Math.pow((1 - item.t), 2) + 3 * ctrlBy * Math.pow(item.t, 2) * (1 - item.t) + y * Math.pow(item.t, 3)
                 newMap.draw()

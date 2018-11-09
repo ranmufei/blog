@@ -16,12 +16,22 @@
     </style>
 </head>
 <body>
-   <canvas height="400" width="600" id="canvas"></canvas> 
+   <canvas height="600" width="800" id="canvas"></canvas> 
    <script>
         var data = [Math.random() * 300];
         for (var i = 1; i < 30; i++) { //按照echarts
             data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
         }
+     //  data=[277,513,573,532,252,66,6,25,277];
+
+
+      var arr=[{'x':163,"y":277},{"x":169,"y":513},{"x":387,"y":573},{"x":673,"y":532},{"x":690,"y":252},{"x":652,"y":66},{"x":468,"y":6},{"x":201,"y":25},{"x":163,"y":277}];
+
+      console.log('arr',arr)
+
+      for(var i =0;i<arr.length;i++){
+        console.log(arr[i].x)
+      }
 
         console.log(data)
         option = {
@@ -36,7 +46,8 @@
                 areaStyle: {
                     color: 'rgb(255, 158, 68)'
                 },
-                data: data
+                data: data,
+                arr:arr
             }
         }
         var ctrlNodesArr = []
@@ -50,6 +61,7 @@
             this.title = option.text
             this.xAxis = option.data
             this.series = option.series
+            this.arr=option.series.arr
         }
         LinearGradient.prototype.initData = function() {
             var self = this
@@ -101,6 +113,41 @@
             }
             console.log('ctrlNodesArr',ctrlNodesArr)
         }
+
+
+        // 画圆节点
+        LinearGradient.prototype.nodes=function(){
+
+
+            for(var i=0;i<arr.length;i++){
+                   var a=i+1;
+                    var cAx = arr[i].x,
+                           cAy = arr[i].y,                        
+                           cBx = arr[i++].x,
+                           cBy = arr[i++].y,                            
+                            nowX =  this.width / this.arr.length ,// 在画布中的位置
+                            nowY =  this.height / this.arr.length; // 在画布中的位置
+
+
+
+                      var obj = {
+                        cAx: cAx,
+                        cAy: cAy,
+                        cBx: cBx,
+                        cBy: cBy,
+                        nowX: nowX,
+                        nowY: nowY,
+                        t: 0
+                    }
+                    ctrlNodesArr.push(obj)
+
+             }
+
+             console.log('ctrlNodearr',ctrlNodesArr)
+        }
+
+
+
         LinearGradient.prototype.draw = function() {
             // dataMax = yMax; dataMin = yMin
             var self = this
@@ -153,7 +200,7 @@
                 var ballY = oy * Math.pow((1 - item.t), 3) + 3 * ctrlAy * item.t * Math.pow((1 - item.t), 2) + 3 * ctrlBy * Math.pow(item.t, 2) * (1 - item.t) + y * Math.pow(item.t, 3)
                 newMap.draw()
                 self.ctx.beginPath()
-                self.ctx.arc(ballX, ballY, 5, 0, Math.PI * 2, false)
+                self.ctx.arc(ballX, ballY, 10, 0, Math.PI * 2, false)
                 self.ctx.fill()
             }
             if(ctrlDrawIndex !== ctrlNodesArr.length) {
@@ -161,7 +208,7 @@
             }
         }
         var newMap = new LinearGradient(option)
-        newMap.initData()
+        newMap.nodes()
         newMap.drawBall()
    </script>
 </body>

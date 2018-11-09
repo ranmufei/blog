@@ -32,7 +32,7 @@ BezierMaker.prototype.bezier = function(t) { //贝塞尔公式调用
         y: y
     }
 }
-BezierMaker.prototype.drawBezier = function() { //通过控制点算出实时xy值渲染到canvas
+BezierMaker.prototype.drawBezier = function() { //通过控制点算出实时xy值渲染到canvas 
     var nodeArr = this.bezierCtrlNodesArr
     if(nodeArr.length === 2) {
         console.warn('Control nodes should be more then two!')
